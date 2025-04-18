@@ -1,5 +1,5 @@
 # EZC
-This is a personal project for a CLI for making files in any languages really easy. Just type ezc <project_name> <command>, and it will create a file in the language you specify, remove specified files/directories, or edit them.
+This is a personal project for a CLI for making files in any languages really easy. Just type **ezc <project_name> <command_name>**, and it will create a project with a file with "Hello World" impemented in the language you specify, remove specified files/directories, or edit them.
 
 **Made using Rust**
 |Command|Description| 
