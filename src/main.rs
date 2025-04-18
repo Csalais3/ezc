@@ -31,16 +31,16 @@ enum Commands {
 fn command_processing(command: &Commands, project_path: &PathBuf){
 
     match command{
-        Commands::Cpy { name } => create_project(".py", &project_path).unwrap(),        // Creates a Python project
-        Commands::Ccpp { name } => create_project(".cpp", &project_path).unwrap(),      // Creates a Cpp project
-        Commands::Cc { name } => create_project(".c", &project_path).unwrap(),          // Creates a C project
-        Commands::Crs { name } => create_project(".rs", &project_path).unwrap(),        // Creates a Rust project
-        Commands::Cjava { name } => create_project(".java", &project_path).unwrap(),    // Creates a Java project
-        Commands::Cjs { name } => create_project(".js", &project_path).unwrap(),        // Creates a JavaScript project
-        Commands::Rem { name } => remove_file("not implemented"),                            // Removes a project or file from memory
-        Commands::Edit { name } => edit_file("not implemented"),                             // Edits a file
-        Commands::Sdir { name } => create_default_directory(&project_path),                        // Saves given directory as a defult directory for creating projects
-        Commands::Rdir { name } => remove_default_directory(&project_path),                        // Removes the saved default directory and returns to current directory
+        Commands::Cpy {name } => create_project(".py", &project_path).unwrap(),        // Creates a Python project
+        Commands::Ccpp {name } => create_project(".cpp", &project_path).unwrap(),      // Creates a Cpp project
+        Commands::Cc {name } => create_project(".c", &project_path).unwrap(),          // Creates a C project
+        Commands::Crs {name } => create_project(".rs", &project_path).unwrap(),        // Creates a Rust project
+        Commands::Cjava {name } => create_project(".java", &project_path).unwrap(),    // Creates a Java project
+        Commands::Cjs {name } => create_project(".js", &project_path).unwrap(),        // Creates a JavaScript project
+        Commands::Rem {name } => remove_file("not implemented"),                            // Removes a project or file from memory
+        Commands::Edit {name } => edit_file("not implemented"),                             // Edits a file
+        Commands::Sdir {name } => create_default_directory(&project_path),                        // Saves given directory as a defult directory for creating projects
+        Commands::Rdir {name } => remove_default_directory(&project_path),                        // Removes the saved default directory and returns to current directory
         _ => println!("Command Type not recognized! Please use help for command types."), 
         // Error if there is no matching command
     };
