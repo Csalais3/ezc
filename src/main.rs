@@ -72,6 +72,27 @@ impl FileScaffolding for Rust {
     }
 }
 
+impl FileScaffolding for Java { 
+    fn extension(&self) -> &'static str { ".java"}
+    fn template(&self) -> &'static str {
+        r#"
+            public class HelloWorld { 
+                public static void main() {
+                    System.out.println("Hello, world!");
+                }  
+            }
+        "#
+    }
+}
+
+impl FileScaffolding for JavaScript { 
+    fn extension(&self) -> &'static str { ".js"}
+    fn template(&self) -> &'static str {
+        r#"
+            alert("Hello, world!");
+        "#
+    }
+}
 #[derive(Subcommand)]
 enum Commands {
     Cpy {name: String},
