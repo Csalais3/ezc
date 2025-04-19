@@ -4,14 +4,72 @@ use std::io::prelude::*;
 use std::env;
 use std::path::PathBuf;
 
+trait FileScaffolding{
+    fn extension(&self) -> &'static str;
+    fn template(&self) -> &'static str;
+}
+
+struct Python;
+struct Cpp;
+struct C;
+struct Rust;
+struct Java;
+struct JavaScript;
 
 #[derive(Parser)]
 #[command(name = "scaffold", version, about)]
-struct Information{
+struct Information {
     #[command(subcommand)]
     cmd: Commands, // Inputted Command
     name: String, // The name the user wants the project to be
     //info_type: String, // d for directory or f for file
+}
+
+impl FileScaffolding for Python { 
+    fn extension(&self) -> &'static str { ".py"}
+    fn template(&self) -> &'static str {
+        r#"if __name__ == "__main__":
+            print("Hello, world!")
+        "#
+    }
+}
+
+impl FileScaffolding for Cpp { 
+    fn extension(&self) -> &'static str { ".cpp"}
+    fn template(&self) -> &'static str {
+        r#" #include <iostream>    
+
+            int main() {
+                std::cout << "Hello, world!";
+                return 0
+            }
+        "#
+    }
+}
+
+impl FileScaffolding for C { 
+    fn extension(&self) -> &'static str { ".c"}
+    fn template(&self) -> &'static str {
+        r#" #include <studio.h>  
+
+            int main() {
+                printf("Hello, world");
+                return 0;
+            } 
+            
+        "#
+    }
+}
+
+impl FileScaffolding for Rust { 
+    fn extension(&self) -> &'static str { ".rs"}
+    fn template(&self) -> &'static str {
+        r#"
+            fn main(){
+                println!("Hello, world!");
+            }  
+        "#
+    }
 }
 
 #[derive(Subcommand)]
