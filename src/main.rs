@@ -1,98 +1,107 @@
 use clap::{Parser, Subcommand};
-use std::fs;
-use std::io::prelude::*;
-use std::env;
-use std::path::PathBuf;
+use std::{
+    fs, 
+    io::{self, Write},
+    path::{Path, PathBuf}
+};
 
 trait FileScaffolding{
-    fn extension(&self) -> &'static str;
-    fn template(&self) -> &'static str;
+    //Using the trait functionality to make a template for each language, I would like to make a project in
+    fn extension(&self) -> &'static str; // The file extension for the language
+    fn template(&self) -> &'static str; // The templated "Hello, world!" implemenation for each language
 }
 
+// Supported Languages
 struct Python;
 struct Cpp;
 struct C;
 struct Rust;
 struct Java;
 struct JavaScript;
+//////////////////////
 
 #[derive(Parser)]
 #[command(name = "scaffold", version, about)]
-struct Information {
+struct Cli {
     #[command(subcommand)]
     cmd: Commands, // Inputted Command
-    name: String, // The name the user wants the project to be
     //info_type: String, // d for directory or f for file
 }
 
+//Implements the scaffolding trait for Python
 impl FileScaffolding for Python { 
     fn extension(&self) -> &'static str { ".py"}
     fn template(&self) -> &'static str {
-        r#"if __name__ == "__main__":
-            print("Hello, world!")
-        "#
+        r##"if __name__ == "__main__":
+    print("Hello, world!")
+        "##
     }
 }
 
+//Implements the scaffolding trait for C++
 impl FileScaffolding for Cpp { 
     fn extension(&self) -> &'static str { ".cpp"}
     fn template(&self) -> &'static str {
-        r#" #include <iostream>    
-
-            int main() {
-                std::cout << "Hello, world!";
-                return 0
-            }
-        "#
+        r##"#include <iostream>   
+         
+int main() {
+    std::cout << "Hello, world!";
+    return 0;
+}
+        "##
     }
 }
 
+//Implements the scaffolding trait for C
 impl FileScaffolding for C { 
     fn extension(&self) -> &'static str { ".c"}
     fn template(&self) -> &'static str {
-        r#" #include <studio.h>  
+        r##"#include <stdio.h>  
 
-            int main() {
-                printf("Hello, world");
-                return 0;
-            } 
-            
-        "#
+int main() {
+    printf("Hello, world");
+    return 0;
+}            
+         "##
     }
 }
 
+//Implements the scaffolding trait for Rust
 impl FileScaffolding for Rust { 
     fn extension(&self) -> &'static str { ".rs"}
     fn template(&self) -> &'static str {
-        r#"
-            fn main(){
-                println!("Hello, world!");
-            }  
-        "#
+        r##"
+fn main(){
+    println!("Hello, world!");
+    }  
+        "##
     }
 }
 
+//Implements the scaffolding trait for Java
 impl FileScaffolding for Java { 
     fn extension(&self) -> &'static str { ".java"}
     fn template(&self) -> &'static str {
-        r#"
-            public class HelloWorld { 
-                public static void main() {
-                    System.out.println("Hello, world!");
-                }  
-            }
-        "#
+        r##"
+public class HelloWorld { 
+    public static void main() {
+        System.out.println("Hello, world!");
+    }  
+}
+        "##
     }
 }
 
+//Implements the scaffolding trait for JavaScript
 impl FileScaffolding for JavaScript { 
     fn extension(&self) -> &'static str { ".js"}
     fn template(&self) -> &'static str {
-        r#"
-            alert("Hello, world!");
-        "#
+        r##"
+alert("Hello, world!");
+        "##
     }
 }
+
 #[derive(Subcommand)]
 enum Commands {
     Cpy {name: String},
@@ -101,42 +110,65 @@ enum Commands {
     Crs {name: String},
     Cjava {name: String},
     Cjs {name: String},
-    Rem {name: String},
-    Edit {name: String},
-    Sdir {name: String},
-    Rdir {name: String},
+    Rem {file: PathBuf},
+    Edit {file: PathBuf},
+    Sdir {dir: PathBuf},
+    Rdir {dir: PathBuf},
 }
 
-fn command_processing(command: &Commands, project_path: &PathBuf){
+fn command_processing(cmd: &Commands) -> io::Result<()>{
 
-    match command{
-        Commands::Cpy {name } => create_project(".py", &project_path).unwrap(),        // Creates a Python project
-        Commands::Ccpp {name } => create_project(".cpp", &project_path).unwrap(),      // Creates a Cpp project
-        Commands::Cc {name } => create_project(".c", &project_path).unwrap(),          // Creates a C project
-        Commands::Crs {name } => create_project(".rs", &project_path).unwrap(),        // Creates a Rust project
-        Commands::Cjava {name } => create_project(".java", &project_path).unwrap(),    // Creates a Java project
-        Commands::Cjs {name } => create_project(".js", &project_path).unwrap(),        // Creates a JavaScript project
-        Commands::Rem {name } => remove_file("not implemented"),                            // Removes a project or file from memory
-        Commands::Edit {name } => edit_file("not implemented"),                             // Edits a file
-        Commands::Sdir {name } => create_default_directory(&project_path),                        // Saves given directory as a defult directory for creating projects
-        Commands::Rdir {name } => remove_default_directory(&project_path),                        // Removes the saved default directory and returns to current directory
-        _ => println!("Command Type not recognized! Please use help for command types."), 
+    match cmd{
+        // Creates a Python project
+        Commands::Cpy {name } => {let path = Path::new(name);
+                                            create_project(Python {}, path)?;
+                                            println!("Created Python Project '{}' in '{}'", name, path.display());},  
+
+        // Creates a C++ project
+        Commands::Ccpp {name } => {let path = Path::new(name);
+                                            create_project(Cpp {}, path)?;
+                                            println!("Created Python Project '{}' in '{}'", name, path.display());},
+
+        // Creates a C project
+        Commands::Cc {name } => {let path = Path::new(name);
+                                            create_project(C {}, path)?;
+                                            println!("Created Python Project '{}' in '{}'", name, path.display());},
+
+        // Creates a Rust project
+        Commands::Crs {name } => {let path = Path::new(name);
+                                            create_project(Rust {}, path)?;
+                                            println!("Created Python Project '{}' in '{}'", name, path.display());},    
+
+        // Creates a Java project
+        Commands::Cjava {name } => {let path = Path::new(name);
+                                            create_project(Java {}, path)?;
+                                            println!("Created Python Project '{}' in '{}'", name, path.display());}, 
+
+        // Creates a JavaScript project
+        Commands::Cjs {name } => {let path = Path::new(name);
+                                            create_project(JavaScript {}, path)?;
+                                            println!("Created Python Project '{}' in '{}'", name, path.display());},  
+
+        // Removes a project or file from memory
+        Commands::Rem {file } => remove_file("not implemented"),                            
+        Commands::Edit {file } => edit_file("not implemented"),                // Edits a file
+        Commands::Sdir {dir } => create_default_directory(),                        // Saves given directory as a defult directory for creating projects
+        Commands::Rdir {dir } => remove_default_directory(),                        // Removes the saved default directory and returns to current directory
         // Error if there is no matching command
     };
 
+    Ok(())
 }
 
-fn create_project(file_type: &str, project_path: &PathBuf) -> std::io::Result<()>{
+fn create_project<S: FileScaffolding, P: AsRef<Path>>(sc: S, project_path: P) -> io::Result<()> {
+    let project_path = project_path.as_ref();
     fs::create_dir_all(project_path)?;
 
-    let file_path = project_path.join(format!("{}{}", "main", file_type));
+    let file_path = project_path.join(format!("main{}", sc.extension()));
     let mut file = fs::File::create_new(&file_path)?;
 
-    file.write(b"fn main() {
-        println!(\"Hello World\")s
-    }")?;
+    file.write_all(sc.template().as_bytes())?;
 
-    println!("test");
     Ok(())
 }
 
@@ -148,21 +180,16 @@ fn edit_file(name: &str) {
     println!("test");
 }
 
-fn create_default_directory(directory: &PathBuf) {
+fn create_default_directory() {
     println!("test");
 }
 
-fn remove_default_directory(directory: &PathBuf) {
+fn remove_default_directory() {
     println!("test");
 }
 
 fn main() -> std::io::Result<()> {
-    let args = Information::parse();
-    let dir_path = env::current_dir()?;
-    let project_path = dir_path
-                                .join(&args.name);
-
-    command_processing(&args.cmd, &project_path);
-    println!("Created {} in the directory {}!", &args.name, &dir_path.display());
+    let cli = Cli::parse();
+    command_processing(&cli.cmd)?;
     Ok(())
 }

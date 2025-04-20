@@ -2,6 +2,14 @@
 name = "ezc"
 version = "0.1.0"
 edition = "2024"
+authors = ["Christian Salais <chrissal0604@gmail.com>"]
+license = "MIT"
+description = "A tool to create projects for any langauge (WIP)"
+readme = "README.md"
+homepage = "https://github.com/Csalais3"
+repository = "https://github.com/Csalais3/ezc"
+keywords = ["cli", "project_creation", "programming_langugage"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 clap = { version = "4.5.36", features = ["derive"] }
